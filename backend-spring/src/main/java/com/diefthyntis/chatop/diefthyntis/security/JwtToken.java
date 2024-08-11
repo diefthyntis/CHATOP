@@ -1,4 +1,4 @@
-package com.diefthyntis.chatop.diefthyntis.dto;
+package com.diefthyntis.chatop.diefthyntis.security;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
