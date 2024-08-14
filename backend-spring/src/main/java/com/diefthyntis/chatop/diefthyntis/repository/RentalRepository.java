@@ -12,5 +12,5 @@ import com.diefthyntis.chatop.diefthyntis.model.Rental;
 
 @Repository
 public interface RentalRepository extends JpaRepository<Rental, Integer> {
-
+	
 }

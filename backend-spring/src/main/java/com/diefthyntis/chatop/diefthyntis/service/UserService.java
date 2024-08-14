@@ -28,4 +28,6 @@ public class UserService {
 	public User findByEmail(String emailAddress) {
 		return userRepository.findByEmail(emailAddress).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 	}
+
+	
 }

@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 	
-	@ExceptionHandler({UserNotFoundException.class, MissingFileException.class})
+	@ExceptionHandler({UserNotFoundException.class, MissingFileException.class,RentalNotFoundException.class})
     public ResponseEntity<String> handleException(Exception e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
