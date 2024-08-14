@@ -24,4 +24,8 @@ public class UserService {
 	public User getUserById(Integer id) {
 		return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 	}
+
+	public User findByEmail(String emailAddress) {
+		return userRepository.findByEmail(emailAddress).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+	}
 }
