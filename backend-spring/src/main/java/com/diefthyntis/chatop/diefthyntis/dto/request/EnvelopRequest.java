@@ -3,8 +3,8 @@ package com.diefthyntis.chatop.diefthyntis.dto.request;
 import lombok.Data;
 
 @Data
-public class MessageRequest {
-	private String message;
+public class EnvelopRequest {
+	private String word;
 	private String user_id;
 	private String rental_id;
 }

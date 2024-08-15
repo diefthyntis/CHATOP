@@ -16,16 +16,16 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
-@Table(name = "messages")
+@Table(name = "envelop")
 @Data
-public class Message {
+public class Envelop {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 	
 	@NotBlank
     @Size(max = 120)
-    private String message;
+    private String word;
 	
 	@ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -42,7 +42,7 @@ public class Message {
 	    @Column(name = "updated_at")
 	    private java.time.LocalDateTime updatedAt;
 	    
-	    public Message(){
+	    public Envelop(){
 	    	updatedAt=LocalDateTime.now();
 	    	createdAt = LocalDateTime.now();
 	    }

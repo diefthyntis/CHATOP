@@ -1,5 +1,0 @@
-1-  Entities Message
-2 - DTO MessageRequest
-3 - MessageMappging
-4 - MessageService
-5 - MessageController

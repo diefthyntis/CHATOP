@@ -74,9 +74,9 @@ public class RentalController {
 		 */
 		final RentalRequest rentalRequest = new RentalRequest();
 		rentalRequest.setName(name);
-		rentalRequest.setPrice(NumberUtils.convertToNumeric(price));
+		rentalRequest.setPrice(NumberUtils.convertToFloat(price));
 		rentalRequest.setDescription(description);
-		rentalRequest.setSurface(NumberUtils.convertToNumeric(surface));
+		rentalRequest.setSurface(NumberUtils.convertToFloat(surface));
 		rentalRequest.setPicture(fName);
 		rentalRequest.setEmailAddressOwner(emailAddressOwner);
 		final Rental rental = rentalMapping.mapRentalRequestToRental(rentalRequest);
