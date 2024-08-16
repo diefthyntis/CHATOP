@@ -1,11 +1,13 @@
 package com.diefthyntis.chatop.diefthyntis.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.diefthyntis.chatop.diefthyntis.exception.RentalNotFoundException;
 
 import com.diefthyntis.chatop.diefthyntis.model.Rental;
-
+import com.diefthyntis.chatop.diefthyntis.model.User;
 import com.diefthyntis.chatop.diefthyntis.repository.RentalRepository;
 
 
@@ -28,6 +30,14 @@ public class RentalService {
 	public Rental getRentalById(Integer id) {
 		return rentalRepository.findById(id).orElseThrow(() -> new RentalNotFoundException("Rental Not Found"));
 	}
+
+	public List<Rental> getRentals() {
+		// TODO Auto-generated method stub
+		return rentalRepository.findAll();
+	}
 	
+	public void update(Rental rental) {
+		rentalRepository.save(rental);
+	}
 	
 }

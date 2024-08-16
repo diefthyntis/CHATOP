@@ -2,24 +2,33 @@ package com.diefthyntis.chatop.diefthyntis.controller;
 
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.diefthyntis.chatop.diefthyntis.dto.request.EnvelopRequest;
 import com.diefthyntis.chatop.diefthyntis.dto.request.RentalRequest;
+import com.diefthyntis.chatop.diefthyntis.dto.response.RentalResponse;
 import com.diefthyntis.chatop.diefthyntis.dto.response.ServerResponse;
+import com.diefthyntis.chatop.diefthyntis.dto.response.UserResponse;
 import com.diefthyntis.chatop.diefthyntis.exception.MissingFileException;
 import com.diefthyntis.chatop.diefthyntis.mapping.RentalMapping;
 import com.diefthyntis.chatop.diefthyntis.model.Rental;
+import com.diefthyntis.chatop.diefthyntis.model.User;
 import com.diefthyntis.chatop.diefthyntis.service.RentalService;
 import com.diefthyntis.chatop.diefthyntis.utils.FileUploadUtils;
 import com.diefthyntis.chatop.diefthyntis.utils.FileUtils;
@@ -113,6 +122,72 @@ public class RentalController {
 		return ResponseEntity.ok(new ServerResponse("Rental created !"));
       
     }
+	
+	
+
+	@GetMapping("/rentals/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public RentalResponse getRentalById(@PathVariable Integer id) {
+        Rental rental = rentalService.getRentalById(id);
+        return rentalMapping.mapRentalToRentalResponse(rental);
+    }
+	
+	
+	@GetMapping("/rentals")
+    public List<RentalResponse> getRentals() {
+        List<Rental> rentals =  rentalService.getRentals();
+        List<RentalResponse> rentalResponses = new ArrayList<>();
+        
+        rentals.stream().forEach(rental -> {
+        	final RentalResponse rentalResponse;
+        	rentalResponse=rentalMapping.mapRentalToRentalResponse(rental);
+            rentalResponses.add(rentalResponse);
+        });
+        return rentalResponses;
+    }
+	
+	@PostMapping("/rentals/{id}")
+    public ResponseEntity<ServerResponse> update(@PathVariable Integer id,final @RequestPart("name") String name,
+            final @RequestPart("surface") String surface,
+            final @RequestPart("price") String price,
+            final @RequestPart("picture") MultipartFile picture,
+            final @RequestPart("description") String description,final Principal principal) throws IOException, java.io.IOException {
+		log.info("debut de la creation de rental");
+		
+		final String fileName = StringUtils.cleanPath(Optional.ofNullable(picture.getOriginalFilename())
+                .orElseThrow(()-> new MissingFileException("The uploaded file is required but is missing.")));
+		String emailAddressOwner = principal.getName();
+		
+		final String fName = FileUtils.generateStringFromDate(FileUtils.getExtensionByStringHandling(fileName).orElse(null));
+		
+		/*
+		 * l'objet RentalRequest est posté par le FrontEnd et reçu par le controller
+		 */
+		final RentalRequest rentalRequest = new RentalRequest();
+		rentalRequest.setName(name);
+		rentalRequest.setPrice(NumberUtils.convertToFloat(price));
+		rentalRequest.setDescription(description);
+		rentalRequest.setSurface(NumberUtils.convertToFloat(surface));
+		rentalRequest.setPicture(fName);
+		rentalRequest.setEmailAddressOwner(emailAddressOwner);
+		final Rental rental = rentalMapping.mapRentalRequestToRental(rentalRequest);
+		
+		/*
+		 * on est obligé de récupérer le rental crée pour obtenir l'id qui sert à constuire le nom de l'image
+		 */
+		final Rental rentalCreated =rentalService.save(rental);
+		
+		final String uploadDir = storePlace + "/" + rentalCreated.getId();
+        FileUploadUtils.saveFile(uploadDir, fName, picture);
+		
+		
+		return ResponseEntity.ok(new ServerResponse("Rental updated !"));
+      
+    }
+	
+
+	
+	
 	
 	
 }
