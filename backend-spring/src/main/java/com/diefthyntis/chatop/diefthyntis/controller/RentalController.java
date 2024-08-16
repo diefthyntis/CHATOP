@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -146,13 +147,13 @@ public class RentalController {
         return rentalResponses;
     }
 	
-	@PostMapping("/rentals/{id}")
+	@PutMapping("/rentals/{id}")
     public ResponseEntity<ServerResponse> update(@PathVariable Integer id,final @RequestPart("name") String name,
             final @RequestPart("surface") String surface,
             final @RequestPart("price") String price,
             final @RequestPart("picture") MultipartFile picture,
             final @RequestPart("description") String description,final Principal principal) throws IOException, java.io.IOException {
-		log.info("debut de la creation de rental");
+		log.info("Début de la modification de rental");
 		
 		final String fileName = StringUtils.cleanPath(Optional.ofNullable(picture.getOriginalFilename())
                 .orElseThrow(()-> new MissingFileException("The uploaded file is required but is missing.")));
@@ -175,9 +176,10 @@ public class RentalController {
 		/*
 		 * on est obligé de récupérer le rental crée pour obtenir l'id qui sert à constuire le nom de l'image
 		 */
-		final Rental rentalCreated =rentalService.save(rental);
+		rental.setId(id);
+		rentalService.update(rental);
 		
-		final String uploadDir = storePlace + "/" + rentalCreated.getId();
+		final String uploadDir = storePlace + "/" + rental.getId();
         FileUploadUtils.saveFile(uploadDir, fName, picture);
 		
 		
