@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.diefthyntis.chatop.diefthyntis.dto.request.EnvelopRequest;
 import com.diefthyntis.chatop.diefthyntis.dto.request.RentalRequest;
 import com.diefthyntis.chatop.diefthyntis.dto.response.ServerResponse;
 import com.diefthyntis.chatop.diefthyntis.exception.MissingFileException;
@@ -63,6 +65,24 @@ public class RentalController {
             final @RequestPart("picture") MultipartFile picture,
             final @RequestPart("description") String description,final Principal principal) throws IOException, java.io.IOException {
 		log.info("debut de la creation de rental");
+		
+		/*
+		 * 
+		 * 
+		 * Dans ce contexte RentalController, les données envoyées par ANGULAR sont encapsulées 
+		 * dans une structure de données de type "form-data" et non pas dans une structure de données de type "Json",
+		 * qui est une alternative à "form-data"
+		 * Ce type de structure de données "form-data" implique de traiter les champs un par un.
+		 * "form-data" est utilisé dans ce contexte plutot que Json car il y a un fichier image à transporter,
+		 * ce qui est impossible avec Json
+		 * 
+		 * 
+		 * Si l'objet reçu était un objet Json, on aurait du mettre comme paramètre de la méthode:
+		 * "final @RequestBody RentalRequest rentalRequest"
+		 * La désérialisation consiste à transformer un objet json en objet java
+		 *
+		 */
+		
 		final String fileName = StringUtils.cleanPath(Optional.ofNullable(picture.getOriginalFilename())
                 .orElseThrow(()-> new MissingFileException("The uploaded file is required but is missing.")));
 		String emailAddressOwner = principal.getName();
@@ -80,6 +100,10 @@ public class RentalController {
 		rentalRequest.setPicture(fName);
 		rentalRequest.setEmailAddressOwner(emailAddressOwner);
 		final Rental rental = rentalMapping.mapRentalRequestToRental(rentalRequest);
+		
+		/*
+		 * on est obligé de récupérer le rental crée pour obtenir l'id qui sert à constuire le nom de l'image
+		 */
 		final Rental rentalCreated =rentalService.save(rental);
 		
 		final String uploadDir = storePlace + "/" + rentalCreated.getId();

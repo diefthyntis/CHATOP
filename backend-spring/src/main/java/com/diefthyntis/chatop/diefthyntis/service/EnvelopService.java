@@ -17,8 +17,8 @@ public class EnvelopService {
 
 private final EnvelopRepository envelopRepository;
 	
-	public Envelop save(Envelop envelop) {
-		return envelopRepository.save(envelop);
+	public void save(Envelop envelop) {
+		envelopRepository.save(envelop);
 	}
 
 }

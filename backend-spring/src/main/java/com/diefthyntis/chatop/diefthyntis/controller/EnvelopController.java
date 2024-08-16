@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,26 +55,19 @@ public class EnvelopController {
 	private final EnvelopService envelopService;
 	private final EnvelopMapping envelopMapping;
 	
-	@PostMapping("/envelop")
-    public ResponseEntity<ServerResponse> create(final @RequestPart("user_id") String user_id,
-            final @RequestPart("rental_id") String rental_id,
-            final @RequestPart("word") String word) throws IOException, java.io.IOException {
+	@PostMapping("/messages")
+    public ResponseEntity<ServerResponse> create(final @RequestBody EnvelopRequest envelopRequest) throws IOException, java.io.IOException {
 		log.info("debut de la creation de envelop");
 			
 		/*
 		 * l'objet EnvelopRequest est posté par le FrontEnd et reçu par le controller
 		 */
-		final EnvelopRequest envelopRequest = new EnvelopRequest();
-		envelopRequest.setWord(word);
-		envelopRequest.setUser_id(user_id);
-		envelopRequest.setRental_id(rental_id);
+		
 		final Envelop envelop = envelopMapping.mapEnvelopRequestToEnvelop(envelopRequest);
-		final Envelop envelopCreated =envelopService.save(envelop);
+		envelopService.save(envelop);
+			
 		
-		
-		
-		
-		return ResponseEntity.ok(new ServerResponse("Envelop created !"));
+		return ResponseEntity.ok(new ServerResponse("Message send with success"));
       
     }
 	

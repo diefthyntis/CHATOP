@@ -7,5 +7,5 @@ import lombok.Data;
  */
 @Data
 public class ServerResponse {
-	private final String laius;
+	private final String message;
 }
