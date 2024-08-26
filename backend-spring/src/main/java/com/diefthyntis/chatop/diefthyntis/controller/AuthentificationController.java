@@ -105,6 +105,3 @@ public class AuthentificationController {
 	
 }
 
-/*
- * @RequestMapping("/api/authorization")
- */

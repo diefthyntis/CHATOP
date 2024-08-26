@@ -44,14 +44,14 @@ public class User {
     private String password;
     
     @Column(name = "created_at")
-    private java.time.LocalDateTime createdAt;
+    private java.time.LocalDateTime created_at;
     
     @Column(name = "updated_at")
-    private java.time.LocalDateTime updatedAt;
+    private java.time.LocalDateTime updated_at;
     
     public User(){
-    	updatedAt=LocalDateTime.now();
-    	createdAt = LocalDateTime.now();
+    	updated_at=LocalDateTime.now();
+    	created_at = LocalDateTime.now();
     }
     
 }
