@@ -1,6 +1,8 @@
 package com.diefthyntis.chatop.diefthyntis.controller;
 
 
+import java.security.Principal;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -75,7 +77,7 @@ public class AuthentificationController {
 	
 		
 		final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(signinRequest.getLogin(), signinRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(signinRequest.getEmail(), signinRequest.getPassword()));
         final String jwt = jwtUtils.generateJwtToken(authentication);
 		
 		
@@ -93,8 +95,10 @@ public class AuthentificationController {
 
 
 	@GetMapping("/me")
-    public ResponseEntity<String> getMe() {
-        return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<User> getMe(final Principal principal) {
+		String emailAddressUser = principal.getName();
+		final User user=userService.findByEmail(emailAddressUser);
+		return ResponseEntity.ok(user);
     }
 	
 	

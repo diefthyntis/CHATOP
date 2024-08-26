@@ -27,4 +27,5 @@ public class UserController {
         User user = userService.getUserById(id);
         return userMapping.mapUserToUserResponse(user);
     }
+	
 }
