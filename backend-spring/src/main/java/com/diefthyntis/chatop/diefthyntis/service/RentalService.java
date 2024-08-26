@@ -27,17 +27,29 @@ public class RentalService {
 		return rentalRepository.save(rental);
 	}
 	
-	public Rental getRentalById(Integer id) {
-		return rentalRepository.findById(id).orElseThrow(() -> new RentalNotFoundException("Rental Not Found"));
+	public Rental getRentalById(Integer rentalId) {
+		return rentalRepository.findById(rentalId).orElseThrow(() -> new RentalNotFoundException("Rental Not Found"));
 	}
+	
 
+	 
 	public List<Rental> getRentals() {
 		// TODO Auto-generated method stub
 		return rentalRepository.findAll();
-	}
+		}
+	 
+	
+	 public List<Rental> getRentalsByUserId(Integer userId) {
+			// TODO Auto-generated method stub
+			return rentalRepository.findByowner_id(userId);
+			}
+	
 	
 	public void update(Rental rental) {
 		rentalRepository.save(rental);
 	}
+	
+	
+	
 	
 }

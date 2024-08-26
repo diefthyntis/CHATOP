@@ -13,8 +13,8 @@ public class UserMapping {
 		userResponse.setId(user.getId());
 		userResponse.setName(user.getName());
 		userResponse.setEmail(user.getEmail());
-		userResponse.setCreated_at(DateUtils.convertLocalDateToString(user.getCreatedAt()));
-		userResponse.setUpdated_at(DateUtils.convertLocalDateToString(user.getUpdatedAt()));
+		userResponse.setCreated_at(DateUtils.convertLocalDateToString(user.getCreated_at()));
+		userResponse.setUpdated_at(DateUtils.convertLocalDateToString(user.getUpdated_at()));
 		return userResponse;
 	}
 }

@@ -28,9 +28,11 @@ import com.diefthyntis.chatop.diefthyntis.dto.response.ServerResponse;
 import com.diefthyntis.chatop.diefthyntis.dto.response.UserResponse;
 import com.diefthyntis.chatop.diefthyntis.exception.MissingFileException;
 import com.diefthyntis.chatop.diefthyntis.mapping.RentalMapping;
+import com.diefthyntis.chatop.diefthyntis.mapping.UserMapping;
 import com.diefthyntis.chatop.diefthyntis.model.Rental;
 import com.diefthyntis.chatop.diefthyntis.model.User;
 import com.diefthyntis.chatop.diefthyntis.service.RentalService;
+import com.diefthyntis.chatop.diefthyntis.service.UserService;
 import com.diefthyntis.chatop.diefthyntis.utils.FileUploadUtils;
 import com.diefthyntis.chatop.diefthyntis.utils.FileUtils;
 import com.diefthyntis.chatop.diefthyntis.utils.NumberUtils;
@@ -134,6 +136,9 @@ public class RentalController {
     }
 	
 	
+
+	
+	/*
 	@GetMapping("/rentals")
     public List<RentalResponse> getRentals() {
         List<Rental> rentals =  rentalService.getRentals();
@@ -146,6 +151,28 @@ public class RentalController {
         });
         return rentalResponses;
     }
+    */
+    
+	
+	
+	
+	private final UserService userService;
+	
+	@GetMapping("/rentals")
+    public List<RentalResponse> getRentals(final Principal principal) {
+		String emailAddressUser = principal.getName();
+		final User user=userService.findByEmail(emailAddressUser);
+        List<Rental> rentals =  rentalService.getRentalsByUserId(user.getId());
+        List<RentalResponse> rentalResponses = new ArrayList<>();
+        
+        rentals.stream().forEach(rental -> {
+        	final RentalResponse rentalResponse;
+        	rentalResponse=rentalMapping.mapRentalToRentalResponse(rental);
+            rentalResponses.add(rentalResponse);
+        });
+        return rentalResponses;
+    }
+    
 	
 	@PutMapping("/rentals/{id}")
     public ResponseEntity<ServerResponse> update(@PathVariable Integer id,final @RequestPart("name") String name,
