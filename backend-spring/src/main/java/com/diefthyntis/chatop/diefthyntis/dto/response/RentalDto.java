@@ -3,7 +3,11 @@ package com.diefthyntis.chatop.diefthyntis.dto.response;
 import lombok.Data;
 
 
-// version pour s'adapter au front End OCR tordu !!! rentals.rentals
+
+/*
+ * Cette classe va être instanciée plusieurs fois pour alimenter une liste contenu dans 
+ * une instance de la classe RentalResponse 
+ */
 @Data
 public class RentalDto {
 	private Integer id;

@@ -128,15 +128,6 @@ public class RentalController {
     }
 	
 	
-/*
- * 
- * 	@GetMapping("/rentals/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public RentalResponse getRentalById(@PathVariable Integer id) {
-        Rental rental = rentalService.getRentalById(id);
-        return rentalMapping.mapRentalToRentalResponse(rental);
-    }
- */
 	@GetMapping("/rentals/{id}")
     @ResponseStatus(HttpStatus.OK)
     public RentalDto getRentalById(@PathVariable Integer id) {
@@ -145,62 +136,15 @@ public class RentalController {
     }
 	
 	
-
-	
-	/*
-	@GetMapping("/rentals")
-    public List<RentalResponse> getRentals() {
-        List<Rental> rentals =  rentalService.getRentals();
-        List<RentalResponse> rentalResponses = new ArrayList<>();
-        
-        rentals.stream().forEach(rental -> {
-        	final RentalResponse rentalResponse;
-        	rentalResponse=rentalMapping.mapRentalToRentalResponse(rental);
-            rentalResponses.add(rentalResponse);
-        });
-        return rentalResponses;
-    }
-    */
-    
-	
-	
-	
 	private final UserService userService;
 	
-	/*
-	@GetMapping("/alan/rentals")
-    public List<RentalResponse> getRentals(final Principal principal) {
-		String emailAddressUser = principal.getName();
-		final User user=userService.findByEmail(emailAddressUser);
-        List<Rental> rentals =  rentalService.getRentalsByUserId(user.getId());
-        List<RentalResponse> rentalResponses = new ArrayList<>();
-        
-        rentals.stream().forEach(rental -> {
-        	final RentalResponse rentalResponse;
-        	rentalResponse=rentalMapping.mapRentalToRentalResponse(rental);
-            rentalResponses.add(rentalResponse);
-        });
-        return rentalResponses;
-    }
-    */
+
 
 	@GetMapping("/rentals")
     public RentalResponse getRentals(final Principal principal) {
 		String emailAddressUser = principal.getName();
 		final User user=userService.findByEmail(emailAddressUser);
         List<Rental> rentals =  rentalService.getRentalsByUserId(user.getId());
-        
-        /*
-         * Version avant adaptation du FrontEnd merdique de OCR
-        List<RentalResponse> rentalResponses = new ArrayList<>();
-        rentals.stream().forEach(rental -> {
-        	final RentalResponse rentalResponse;
-        	rentalResponse=rentalMapping.mapRentalToRentalResponse(rental);
-            rentalResponses.add(rentalResponse);
-        });
-        return rentalResponses;
-        */
-           
         RentalResponse rentalResponse = new RentalResponse();
         List<RentalDto>rentalDtos = new ArrayList();
         rentals.stream().forEach(rental -> {

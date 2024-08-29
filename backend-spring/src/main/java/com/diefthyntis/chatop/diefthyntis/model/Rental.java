@@ -20,43 +20,40 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name="rentals")
+@Table(name = "rentals")
 public class Rental {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-	
-    
-    @NotBlank
-    @Size(max = 20)
-    private String name;
-    
-    @Column(name = "surface")
-    private Float surface;
-    
-    @Column(name = "price")
-    private Float price;
-    
-    @Column(name = "picture")
-    private String picture;
-    
-    @Column(name = "description")
-    private String description;
-    
-    @ManyToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "id")
-    private User owner;
-    
-    
-    
-    @Column(name = "created_at")
-    private java.time.LocalDateTime createdAt;
-    
-    @Column(name = "updated_at")
-    private java.time.LocalDateTime updatedAt;
-    
-    public Rental(){
-    	updatedAt=LocalDateTime.now();
-    	createdAt = LocalDateTime.now();
-    }
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
+	@NotBlank
+	@Size(max = 20)
+	private String name;
+
+	@Column(name = "surface")
+	private Float surface;
+
+	@Column(name = "price")
+	private Float price;
+
+	@Column(name = "picture")
+	private String picture;
+
+	@Column(name = "description")
+	private String description;
+
+	@ManyToOne
+	@JoinColumn(name = "owner_id", referencedColumnName = "id")
+	private User owner;
+
+	@Column(name = "created_at")
+	private java.time.LocalDateTime createdAt;
+
+	@Column(name = "updated_at")
+	private java.time.LocalDateTime updatedAt;
+
+	public Rental() {
+		updatedAt = LocalDateTime.now();
+		createdAt = LocalDateTime.now();
+	}
 }
