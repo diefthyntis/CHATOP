@@ -1,12 +1,11 @@
 package com.diefthyntis.chatop.diefthyntis.dto.response;
 
-import java.util.List;
-
 import lombok.Data;
 
+
+// version pour s'adapter au front End OCR tordu !!! rentals.rentals
 @Data
-public class RentalResponse {
-	/*
+public class RentalDto {
 	private Integer id;
 	private String name;
     private Float surface;
@@ -15,8 +14,5 @@ public class RentalResponse {
     private String description;
     private Integer owner_id;
     private String created_at;
-  
 	private String updated_at;
-	  */
-	private List<RentalDto>rentals;
 }

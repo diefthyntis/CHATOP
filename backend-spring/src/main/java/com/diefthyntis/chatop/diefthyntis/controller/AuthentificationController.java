@@ -94,11 +94,18 @@ public class AuthentificationController {
 	}
 
 
+	// ResponseEntity<User> est une structure qui a un champ de type User
+	// ResponseEntity c'est une classe générique
 	@GetMapping("/me")
     public ResponseEntity<User> getMe(final Principal principal) {
+		if (principal == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
 		String emailAddressUser = principal.getName();
 		final User user=userService.findByEmail(emailAddressUser);
 		return ResponseEntity.ok(user);
+		// retourne un contenu de type MIME (PDF JSON, HTML, EXCEL tout ce qui 
+		// peut être lue par un navigateur
     }
 	
 	

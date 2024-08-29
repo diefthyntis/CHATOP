@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.diefthyntis.chatop.diefthyntis.dto.request.EnvelopRequest;
 import com.diefthyntis.chatop.diefthyntis.dto.request.RentalRequest;
+import com.diefthyntis.chatop.diefthyntis.dto.response.RentalDto;
 import com.diefthyntis.chatop.diefthyntis.dto.response.RentalResponse;
 import com.diefthyntis.chatop.diefthyntis.dto.response.ServerResponse;
 import com.diefthyntis.chatop.diefthyntis.dto.response.UserResponse;
@@ -127,12 +128,20 @@ public class RentalController {
     }
 	
 	
-
-	@GetMapping("/rentals/{id}")
+/*
+ * 
+ * 	@GetMapping("/rentals/{id}")
     @ResponseStatus(HttpStatus.OK)
     public RentalResponse getRentalById(@PathVariable Integer id) {
         Rental rental = rentalService.getRentalById(id);
         return rentalMapping.mapRentalToRentalResponse(rental);
+    }
+ */
+	@GetMapping("/rentals/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public RentalDto getRentalById(@PathVariable Integer id) {
+        Rental rental = rentalService.getRentalById(id);
+        return rentalMapping.mapRentalToRentalDto(rental);
     }
 	
 	
@@ -158,7 +167,8 @@ public class RentalController {
 	
 	private final UserService userService;
 	
-	@GetMapping("/rentals")
+	/*
+	@GetMapping("/alan/rentals")
     public List<RentalResponse> getRentals(final Principal principal) {
 		String emailAddressUser = principal.getName();
 		final User user=userService.findByEmail(emailAddressUser);
@@ -172,7 +182,37 @@ public class RentalController {
         });
         return rentalResponses;
     }
-    
+    */
+
+	@GetMapping("/rentals")
+    public RentalResponse getRentals(final Principal principal) {
+		String emailAddressUser = principal.getName();
+		final User user=userService.findByEmail(emailAddressUser);
+        List<Rental> rentals =  rentalService.getRentalsByUserId(user.getId());
+        
+        /*
+         * Version avant adaptation du FrontEnd merdique de OCR
+        List<RentalResponse> rentalResponses = new ArrayList<>();
+        rentals.stream().forEach(rental -> {
+        	final RentalResponse rentalResponse;
+        	rentalResponse=rentalMapping.mapRentalToRentalResponse(rental);
+            rentalResponses.add(rentalResponse);
+        });
+        return rentalResponses;
+        */
+           
+        RentalResponse rentalResponse = new RentalResponse();
+        List<RentalDto>rentalDtos = new ArrayList();
+        rentals.stream().forEach(rental -> {
+        	final RentalDto rentalDto=rentalMapping.mapRentalToRentalDto(rental);
+        	
+        	rentalDtos.add(rentalDto);
+        });
+        rentalResponse.setRentals(rentalDtos);
+        return rentalResponse;
+    }
+	
+	
 	
 	@PutMapping("/rentals/{id}")
     public ResponseEntity<ServerResponse> update(@PathVariable Integer id,final @RequestPart("name") String name,

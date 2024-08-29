@@ -4,6 +4,7 @@ package com.diefthyntis.chatop.diefthyntis.mapping;
 import org.springframework.stereotype.Component;
 
 import com.diefthyntis.chatop.diefthyntis.dto.request.RentalRequest;
+import com.diefthyntis.chatop.diefthyntis.dto.response.RentalDto;
 import com.diefthyntis.chatop.diefthyntis.dto.response.RentalResponse;
 import com.diefthyntis.chatop.diefthyntis.model.Rental;
 import com.diefthyntis.chatop.diefthyntis.model.User;
@@ -38,7 +39,7 @@ public class RentalMapping {
 		return rental;
 	}
 
-
+/*
 	public RentalResponse mapRentalToRentalResponse(Rental rental) {
 		final RentalResponse rentalResponse = new RentalResponse();
 		rentalResponse.setId(rental.getId());
@@ -52,5 +53,22 @@ public class RentalMapping {
 		rentalResponse.setUpdated_at(DateUtils.convertLocalDateToString(rental.getCreatedAt()));
 		// TODO Auto-generated method stub
 		return rentalResponse;
+	}
+	*/
+
+
+	public RentalDto mapRentalToRentalDto(Rental rental) {
+		final RentalDto rentalDto = new RentalDto();
+		rentalDto.setId(rental.getId());
+		rentalDto.setDescription(rental.getDescription());
+		rentalDto.setOwner_id(rental.getOwner().getId());
+		rentalDto.setName(rental.getName());
+		rentalDto.setPicture(rental.getPicture());
+		rentalDto.setPrice(rental.getPrice());
+		rentalDto.setSurface(rental.getSurface());
+		rentalDto.setCreated_at(DateUtils.convertLocalDateToString(rental.getCreatedAt()));
+		rentalDto.setUpdated_at(DateUtils.convertLocalDateToString(rental.getCreatedAt()));
+		// TODO Auto-generated method stub
+		return rentalDto;
 	}
 }
