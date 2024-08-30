@@ -2,6 +2,7 @@ package com.diefthyntis.chatop.diefthyntis.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.diefthyntis.chatop.diefthyntis.exception.RentalNotFoundException;
@@ -9,7 +10,7 @@ import com.diefthyntis.chatop.diefthyntis.exception.RentalNotFoundException;
 import com.diefthyntis.chatop.diefthyntis.model.Rental;
 import com.diefthyntis.chatop.diefthyntis.model.User;
 import com.diefthyntis.chatop.diefthyntis.repository.RentalRepository;
-
+import com.diefthyntis.chatop.diefthyntis.utils.NumberUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +22,10 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class RentalService {
+	
+	@Autowired
 	private final RentalRepository rentalRepository;
+	
 	
 	public Rental save(Rental rental) {
 		return rentalRepository.save(rental);
@@ -44,10 +48,14 @@ public class RentalService {
 			return rentalRepository.findByowner_id(userId);
 			}
 	
-	
-	public void update(Rental rental) {
-		rentalRepository.save(rental);
+	/*
+	public Integer update(Rental rental) {
+		
+		
+		return rentalRepository.update(rental.getId().toString(),rental.getName(),rental.getSurface().toString(),rental.getPrice().toString(),rental.getDescription());
+		
 	}
+	*/
 	
 	
 	

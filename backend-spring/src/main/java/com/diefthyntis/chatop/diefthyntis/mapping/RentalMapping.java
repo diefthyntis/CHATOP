@@ -25,12 +25,13 @@ import lombok.RequiredArgsConstructor;
 public class RentalMapping {
 	private final UserService userService;
 	
-	
+	/*
 	public Rental mapRentalRequestToRentalForSave(RentalRequest rentalRequest) {
 		final Rental rental = MapRentalToRentalRequest(rentalRequest);
-		rental.setPicture(rentalRequest.getPicture());
+		rental.setPicture(rentalRequest.getPicture().getName());
 		return rental;
 	}
+	*/
 
 /*
 	public RentalResponse mapRentalToRentalResponse(Rental rental) {
@@ -49,17 +50,20 @@ public class RentalMapping {
 	}
 	*/
 	
+	/*
 	public Rental mapRentalRequestToRentalForUpdate(RentalRequest rentalRequest) {
 		final Rental rental = MapRentalToRentalRequest(rentalRequest);
 		return rental;
 	}
+	*/
 
-private Rental MapRentalToRentalRequest(RentalRequest rentalRequest) {
+public Rental mapRentalRequestToRental(RentalRequest rentalRequest) {
 	final Rental rental= new Rental();
 	
 	rental.setName(rentalRequest.getName());
 	rental.setSurface(rentalRequest.getSurface());
 	rental.setPrice(rentalRequest.getPrice());
+	rental.setPicture(rentalRequest.getPicture());
 	rental.setDescription(rentalRequest.getDescription());
 	User owner = userService.findByEmail(rentalRequest.getEmailAddressOwner());
 	rental.setOwner(owner);
@@ -73,8 +77,8 @@ private Rental MapRentalToRentalRequest(RentalRequest rentalRequest) {
 		rentalDto.setDescription(rental.getDescription());
 		rentalDto.setOwner_id(rental.getOwner().getId());
 		rentalDto.setName(rental.getName());
-		
-		rentalDto.setPicture("http://localhost:3001/api/images/"+rental.getId()+"/"+rental.getPicture());
+		final String urlPicture="http://localhost:3001/api/images/"+rental.getId()+"/"+rental.getPicture();
+		rentalDto.setPicture(urlPicture);
 		rentalDto.setPrice(rental.getPrice());
 		rentalDto.setSurface(rental.getSurface());
 		rentalDto.setCreated_at(DateUtils.convertLocalDateToString(rental.getCreatedAt()));

@@ -10,4 +10,9 @@ public class NumberUtils {
 	public static Integer convertToInteger(String data){
 	      return Optional.ofNullable(data).map(Integer::parseInt).orElse((int) 0f);
 	    }
+	
+	public static String convertToString(Integer data) {
+		return Integer.toString(data);
+	
+	}
 }

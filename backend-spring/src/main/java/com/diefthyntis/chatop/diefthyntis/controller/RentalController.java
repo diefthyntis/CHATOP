@@ -14,22 +14,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.diefthyntis.chatop.diefthyntis.dto.request.EnvelopRequest;
+
 import com.diefthyntis.chatop.diefthyntis.dto.request.RentalRequest;
 import com.diefthyntis.chatop.diefthyntis.dto.response.RentalDto;
 import com.diefthyntis.chatop.diefthyntis.dto.response.RentalResponse;
 import com.diefthyntis.chatop.diefthyntis.dto.response.ServerResponse;
-import com.diefthyntis.chatop.diefthyntis.dto.response.UserResponse;
+
 import com.diefthyntis.chatop.diefthyntis.exception.MissingFileException;
 import com.diefthyntis.chatop.diefthyntis.mapping.RentalMapping;
-import com.diefthyntis.chatop.diefthyntis.mapping.UserMapping;
+
 import com.diefthyntis.chatop.diefthyntis.model.Rental;
 import com.diefthyntis.chatop.diefthyntis.model.User;
 import com.diefthyntis.chatop.diefthyntis.service.RentalService;
@@ -71,6 +71,8 @@ public class RentalController {
 	
 	private final RentalMapping rentalMapping;
 	
+
+	
 	@PostMapping("/rentals")
     public ResponseEntity<ServerResponse> create(final @RequestPart("name") String name,
             final @RequestPart("surface") String surface,
@@ -96,11 +98,16 @@ public class RentalController {
 		 *
 		 */
 		
-		final String fileName = StringUtils.cleanPath(Optional.ofNullable(picture.getOriginalFilename())
+		
+		final String filepath = StringUtils.cleanPath(Optional.ofNullable(picture.getOriginalFilename())
                 .orElseThrow(()-> new MissingFileException("The uploaded file is required but is missing.")));
+		final String filename = FileUtils.generateStringFromDate(FileUtils.getExtensionByStringHandling(filepath).orElse(null));
+		
+		
+		
+		
 		String emailAddressOwner = principal.getName();
 		
-		final String fName = FileUtils.generateStringFromDate(FileUtils.getExtensionByStringHandling(fileName).orElse(null));
 		
 		/*
 		 * l'objet RentalRequest est posté par le FrontEnd et reçu par le controller
@@ -110,9 +117,9 @@ public class RentalController {
 		rentalRequest.setPrice(NumberUtils.convertToFloat(price));
 		rentalRequest.setDescription(description);
 		rentalRequest.setSurface(NumberUtils.convertToFloat(surface));
-		rentalRequest.setPicture(fName);
+		rentalRequest.setPicture(filename);
 		rentalRequest.setEmailAddressOwner(emailAddressOwner);
-		final Rental rental = rentalMapping.mapRentalRequestToRentalForSave(rentalRequest);
+		final Rental rental = rentalMapping.mapRentalRequestToRental(rentalRequest);
 		
 		/*
 		 * on est obligé de récupérer le rental crée pour obtenir l'id qui sert à constuire le nom de l'image
@@ -120,12 +127,13 @@ public class RentalController {
 		final Rental rentalCreated =rentalService.save(rental);
 		
 		final String uploadDir = storePlace + "/" + rentalCreated.getId();
-        FileUploadUtils.saveFile(uploadDir, fName, picture);
+        FileUploadUtils.saveFile(uploadDir, filename, picture);
 		
 		
 		return ResponseEntity.ok(new ServerResponse("Rental created !"));
       
     }
+
 	
 	
 	@GetMapping("/rentals/{id}")
@@ -162,6 +170,7 @@ public class RentalController {
     public ResponseEntity<ServerResponse> update(@PathVariable Integer id,final @RequestPart("name") String name,
             final @RequestPart("surface") String surface,
             final @RequestPart("price") String price,
+            final @RequestPart("picture") MultipartFile picture,
             final @RequestPart("description") String description,final Principal principal) throws IOException, java.io.IOException {
 		log.info("Début de la modification de rental");
 		
@@ -170,19 +179,30 @@ public class RentalController {
 		/*
 		 * l'objet RentalRequest est posté par le FrontEnd et reçu par le controller
 		 */
+		
+		
+		final String filepath = StringUtils.cleanPath(Optional.ofNullable(picture.getOriginalFilename())
+                .orElseThrow(()-> new MissingFileException("The uploaded file is required but is missing.")));
+		final String filename = FileUtils.generateStringFromDate(FileUtils.getExtensionByStringHandling(filepath).orElse(null));
+	
+		
 		final RentalRequest rentalRequest = new RentalRequest();
 		rentalRequest.setName(name);
 		rentalRequest.setPrice(NumberUtils.convertToFloat(price));
+		rentalRequest.setPicture(filename);
 		rentalRequest.setDescription(description);
 		rentalRequest.setSurface(NumberUtils.convertToFloat(surface));
 		rentalRequest.setEmailAddressOwner(emailAddressOwner);
-		final Rental rental = rentalMapping.mapRentalRequestToRentalForUpdate(rentalRequest);
+		final Rental rental = rentalMapping.mapRentalRequestToRental(rentalRequest);
 		
 		/*
 		 * on est obligé de récupérer le rental crée pour obtenir l'id qui sert à constuire le nom de l'image
 		 */
 		rental.setId(id);
-		rentalService.update(rental);
+		/*
+		final Integer sqlcode=rentalService.update(rental);
+		*/
+		rentalService.save(rental);
 		
 		return ResponseEntity.ok(new ServerResponse("Rental updated !"));
       
