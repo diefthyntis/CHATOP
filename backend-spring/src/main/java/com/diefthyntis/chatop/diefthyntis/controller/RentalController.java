@@ -112,7 +112,7 @@ public class RentalController {
 		rentalRequest.setSurface(NumberUtils.convertToFloat(surface));
 		rentalRequest.setPicture(fName);
 		rentalRequest.setEmailAddressOwner(emailAddressOwner);
-		final Rental rental = rentalMapping.mapRentalRequestToRental(rentalRequest);
+		final Rental rental = rentalMapping.mapRentalRequestToRentalForSave(rentalRequest);
 		
 		/*
 		 * on est obligé de récupérer le rental crée pour obtenir l'id qui sert à constuire le nom de l'image
@@ -162,15 +162,10 @@ public class RentalController {
     public ResponseEntity<ServerResponse> update(@PathVariable Integer id,final @RequestPart("name") String name,
             final @RequestPart("surface") String surface,
             final @RequestPart("price") String price,
-            final @RequestPart("picture") MultipartFile picture,
             final @RequestPart("description") String description,final Principal principal) throws IOException, java.io.IOException {
 		log.info("Début de la modification de rental");
 		
-		final String fileName = StringUtils.cleanPath(Optional.ofNullable(picture.getOriginalFilename())
-                .orElseThrow(()-> new MissingFileException("The uploaded file is required but is missing.")));
 		String emailAddressOwner = principal.getName();
-		
-		final String fName = FileUtils.generateStringFromDate(FileUtils.getExtensionByStringHandling(fileName).orElse(null));
 		
 		/*
 		 * l'objet RentalRequest est posté par le FrontEnd et reçu par le controller
@@ -180,19 +175,14 @@ public class RentalController {
 		rentalRequest.setPrice(NumberUtils.convertToFloat(price));
 		rentalRequest.setDescription(description);
 		rentalRequest.setSurface(NumberUtils.convertToFloat(surface));
-		rentalRequest.setPicture(fName);
 		rentalRequest.setEmailAddressOwner(emailAddressOwner);
-		final Rental rental = rentalMapping.mapRentalRequestToRental(rentalRequest);
+		final Rental rental = rentalMapping.mapRentalRequestToRentalForUpdate(rentalRequest);
 		
 		/*
 		 * on est obligé de récupérer le rental crée pour obtenir l'id qui sert à constuire le nom de l'image
 		 */
 		rental.setId(id);
 		rentalService.update(rental);
-		
-		final String uploadDir = storePlace + "/" + rental.getId();
-        FileUploadUtils.saveFile(uploadDir, fName, picture);
-		
 		
 		return ResponseEntity.ok(new ServerResponse("Rental updated !"));
       

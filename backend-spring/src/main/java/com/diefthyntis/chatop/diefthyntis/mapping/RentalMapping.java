@@ -26,16 +26,9 @@ public class RentalMapping {
 	private final UserService userService;
 	
 	
-	public Rental mapRentalRequestToRental(RentalRequest rentalRequest) {
-		final Rental rental= new Rental();
-		
-		rental.setName(rentalRequest.getName());
-		rental.setSurface(rentalRequest.getSurface());
-		rental.setPrice(rentalRequest.getPrice());
+	public Rental mapRentalRequestToRentalForSave(RentalRequest rentalRequest) {
+		final Rental rental = MapRentalToRentalRequest(rentalRequest);
 		rental.setPicture(rentalRequest.getPicture());
-		rental.setDescription(rentalRequest.getDescription());
-		User owner = userService.findByEmail(rentalRequest.getEmailAddressOwner());
-		rental.setOwner(owner);
 		return rental;
 	}
 
@@ -55,6 +48,23 @@ public class RentalMapping {
 		return rentalResponse;
 	}
 	*/
+	
+	public Rental mapRentalRequestToRentalForUpdate(RentalRequest rentalRequest) {
+		final Rental rental = MapRentalToRentalRequest(rentalRequest);
+		return rental;
+	}
+
+private Rental MapRentalToRentalRequest(RentalRequest rentalRequest) {
+	final Rental rental= new Rental();
+	
+	rental.setName(rentalRequest.getName());
+	rental.setSurface(rentalRequest.getSurface());
+	rental.setPrice(rentalRequest.getPrice());
+	rental.setDescription(rentalRequest.getDescription());
+	User owner = userService.findByEmail(rentalRequest.getEmailAddressOwner());
+	rental.setOwner(owner);
+	return rental;
+}
 
 
 	public RentalDto mapRentalToRentalDto(Rental rental) {
@@ -63,7 +73,8 @@ public class RentalMapping {
 		rentalDto.setDescription(rental.getDescription());
 		rentalDto.setOwner_id(rental.getOwner().getId());
 		rentalDto.setName(rental.getName());
-		rentalDto.setPicture(rental.getPicture());
+		
+		rentalDto.setPicture("http://localhost:3001/api/images/"+rental.getId()+"/"+rental.getPicture());
 		rentalDto.setPrice(rental.getPrice());
 		rentalDto.setSurface(rental.getSurface());
 		rentalDto.setCreated_at(DateUtils.convertLocalDateToString(rental.getCreatedAt()));

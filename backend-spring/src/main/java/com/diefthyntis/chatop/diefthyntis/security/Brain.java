@@ -157,8 +157,8 @@ public class Brain {
 		http.csrf(csrf -> csrf.disable())
 				.exceptionHandling(exception -> exception.authenticationEntryPoint(closedDoor))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll()
-						.anyRequest().authenticated());
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").
+						permitAll().requestMatchers("/api/images/**").permitAll().anyRequest().authenticated());
 
 		http.authenticationProvider(authenticationProvider());
 
