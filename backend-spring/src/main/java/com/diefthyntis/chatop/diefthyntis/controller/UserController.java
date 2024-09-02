@@ -20,12 +20,12 @@ import org.springframework.http.HttpStatus;
 public class UserController {
 	private final UserService userService;
 	private final UserMapping userMapping;
-	
+
 	@GetMapping("/user/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public UserResponse getUserById(@PathVariable Integer id) {
-        User user = userService.getUserById(id);
-        return userMapping.mapUserToUserResponse(user);
-    }
-	
+	@ResponseStatus(HttpStatus.OK)
+	public UserResponse getUserById(@PathVariable Integer id) {
+		User user = userService.getUserById(id);
+		return userMapping.mapUserToUserResponse(user);
+	}
+
 }

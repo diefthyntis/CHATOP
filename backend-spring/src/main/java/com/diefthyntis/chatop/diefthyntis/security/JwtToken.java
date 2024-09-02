@@ -7,5 +7,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtToken {
 	private final String token;
-	
+
 }

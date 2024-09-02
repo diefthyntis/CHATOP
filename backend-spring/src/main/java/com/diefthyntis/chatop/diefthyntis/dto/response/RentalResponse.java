@@ -6,5 +6,5 @@ import lombok.Data;
 
 @Data
 public class RentalResponse {
-	private List<RentalDto>rentals;
+	private List<RentalDto> rentals;
 }

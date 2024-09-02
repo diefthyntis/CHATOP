@@ -5,8 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.diefthyntis.chatop.diefthyntis.model.Envelop;
 
-
 @Repository
 public interface EnvelopRepository extends JpaRepository<Envelop, Integer> {
-	
+
 }

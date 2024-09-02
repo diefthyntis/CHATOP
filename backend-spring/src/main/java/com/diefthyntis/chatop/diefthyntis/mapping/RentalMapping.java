@@ -1,6 +1,5 @@
 package com.diefthyntis.chatop.diefthyntis.mapping;
 
-
 import org.springframework.stereotype.Component;
 
 import com.diefthyntis.chatop.diefthyntis.dto.request.RentalRequest;
@@ -24,38 +23,30 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RentalMapping {
 	private final UserService userService;
-	
-	
+
 	public Rental mapRentalRequestToRentalForSave(RentalRequest rentalRequest) {
 		final Rental rental = new Rental();
-		final Rental rentalResultMapping = mapRentalRequestToRental(rental,rentalRequest);
+		final Rental rentalResultMapping = mapRentalRequestToRental(rental, rentalRequest);
 		rentalResultMapping.setPicture(rentalRequest.getPicture());
 		User owner = userService.findByEmail(rentalRequest.getEmailAddressOwner());
 		rentalResultMapping.setOwner(owner);
 		return rentalResultMapping;
 	}
-	
 
+	public Rental mapRentalRequestToRentalForUpdate(final Rental rental, final RentalRequest rentalRequest) {
+		return mapRentalRequestToRental(rental, rentalRequest);
 
-	
-	
-	public Rental mapRentalRequestToRentalForUpdate(final Rental rental,final RentalRequest rentalRequest) {
-		return mapRentalRequestToRental(rental,rentalRequest);
-		
 	}
-	
 
-public Rental mapRentalRequestToRental(final Rental rental,final RentalRequest rentalRequest) {
-	
-	
-	rental.setName(rentalRequest.getName());
-	rental.setSurface(rentalRequest.getSurface());
-	rental.setPrice(rentalRequest.getPrice());
-	rental.setDescription(rentalRequest.getDescription());
-	
-	return rental;
-}
+	public Rental mapRentalRequestToRental(final Rental rental, final RentalRequest rentalRequest) {
 
+		rental.setName(rentalRequest.getName());
+		rental.setSurface(rentalRequest.getSurface());
+		rental.setPrice(rentalRequest.getPrice());
+		rental.setDescription(rentalRequest.getDescription());
+
+		return rental;
+	}
 
 	public RentalDto mapRentalToRentalDto(Rental rental) {
 		final RentalDto rentalDto = new RentalDto();
@@ -63,13 +54,13 @@ public Rental mapRentalRequestToRental(final Rental rental,final RentalRequest r
 		rentalDto.setDescription(rental.getDescription());
 		rentalDto.setOwner_id(rental.getOwner().getId());
 		rentalDto.setName(rental.getName());
-		final String urlPicture="http://localhost:3001/api/images/"+rental.getId()+"/"+rental.getPicture();
+		final String urlPicture = "http://localhost:3001/api/images/" + rental.getId() + "/" + rental.getPicture();
 		rentalDto.setPicture(urlPicture);
 		rentalDto.setPrice(rental.getPrice());
 		rentalDto.setSurface(rental.getSurface());
 		rentalDto.setCreated_at(DateUtils.convertLocalDateToString(rental.getCreatedAt()));
 		rentalDto.setUpdated_at(DateUtils.convertLocalDateToString(rental.getCreatedAt()));
-		// TODO Auto-generated method stub
+
 		return rentalDto;
 	}
 }

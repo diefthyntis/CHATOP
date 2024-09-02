@@ -1,6 +1,5 @@
 package com.diefthyntis.chatop.diefthyntis.controller;
 
-
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import com.diefthyntis.chatop.diefthyntis.dto.request.RentalRequest;
 import com.diefthyntis.chatop.diefthyntis.dto.response.RentalDto;
@@ -57,58 +55,50 @@ import lombok.extern.slf4j.Slf4j;
  * L'information de l'utilisateur connecté est disponible dans l'interface Principal
  */
 
-
-
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @Slf4j
 public class RentalController {
 	private final RentalService rentalService;
-	
-	@Value("${diefthyntis.store}")
-	  private String storePlace;
-	
-	private final RentalMapping rentalMapping;
-	
 
-	
+	@Value("${diefthyntis.store}")
+	private String storePlace;
+
+	private final RentalMapping rentalMapping;
+
 	@PostMapping("/rentals")
-    public ResponseEntity<ServerResponse> create(final @RequestPart("name") String name,
-            final @RequestPart("surface") String surface,
-            final @RequestPart("price") String price,
-            final @RequestPart("picture") MultipartFile picture,
-            final @RequestPart("description") String description,final Principal principal) throws IOException, java.io.IOException {
+	public ResponseEntity<ServerResponse> create(final @RequestPart("name") String name,
+			final @RequestPart("surface") String surface, final @RequestPart("price") String price,
+			final @RequestPart("picture") MultipartFile picture, final @RequestPart("description") String description,
+			final Principal principal) throws IOException, java.io.IOException {
 		log.info("debut de la creation de rental");
-		
+
 		/*
 		 * 
 		 * 
-		 * Dans ce contexte RentalController, les données envoyées par ANGULAR sont encapsulées 
-		 * dans une structure de données de type "form-data" et non pas dans une structure de données de type "Json",
-		 * qui est une alternative à "form-data"
-		 * Ce type de structure de données "form-data" implique de traiter les champs un par un.
-		 * "form-data" est utilisé dans ce contexte plutot que Json car il y a un fichier image à transporter,
-		 * ce qui est impossible avec Json
+		 * Dans ce contexte RentalController, les données envoyées par ANGULAR sont
+		 * encapsulées dans une structure de données de type "form-data" et non pas dans
+		 * une structure de données de type "Json", qui est une alternative à
+		 * "form-data" Ce type de structure de données "form-data" implique de traiter
+		 * les champs un par un. "form-data" est utilisé dans ce contexte plutot que
+		 * Json car il y a un fichier image à transporter, ce qui est impossible avec
+		 * Json
 		 * 
 		 * 
-		 * Si l'objet reçu était un objet Json, on aurait du mettre comme paramètre de la méthode:
-		 * "final @RequestBody RentalRequest rentalRequest"
-		 * La désérialisation consiste à transformer un objet json en objet java
+		 * Si l'objet reçu était un objet Json, on aurait du mettre comme paramètre de
+		 * la méthode: "final @RequestBody RentalRequest rentalRequest" La
+		 * désérialisation consiste à transformer un objet json en objet java
 		 *
 		 */
-		
-		
+
 		final String filepath = StringUtils.cleanPath(Optional.ofNullable(picture.getOriginalFilename())
-                .orElseThrow(()-> new MissingFileException("The uploaded file is required but is missing.")));
-		final String filename = FileUtils.generateStringFromDate(FileUtils.getExtensionByStringHandling(filepath).orElse(null));
-		
-		
-		
-		
+				.orElseThrow(() -> new MissingFileException("The uploaded file is required but is missing.")));
+		final String filename = FileUtils
+				.generateStringFromDate(FileUtils.getExtensionByStringHandling(filepath).orElse(null));
+
 		String emailAddressOwner = principal.getName();
-		
-		
+
 		/*
 		 * l'objet RentalRequest est posté par le FrontEnd et reçu par le controller
 		 */
@@ -120,82 +110,67 @@ public class RentalController {
 		rentalRequest.setPicture(filename);
 		rentalRequest.setEmailAddressOwner(emailAddressOwner);
 		final Rental rental = rentalMapping.mapRentalRequestToRentalForSave(rentalRequest);
-		
+
 		/*
-		 * on est obligé de récupérer le rental crée pour obtenir l'id qui sert à constuire le nom de l'image
+		 * on est obligé de récupérer le rental crée pour obtenir l'id qui sert à
+		 * constuire le nom de l'image
 		 */
-		final Rental rentalCreated =rentalService.save(rental);
-		
+		final Rental rentalCreated = rentalService.save(rental);
+
 		final String uploadDir = storePlace + "/" + rentalCreated.getId();
-        FileUploadUtils.saveFile(uploadDir, filename, picture);
-		
-		
+		FileUploadUtils.saveFile(uploadDir, filename, picture);
+
 		return ResponseEntity.ok(new ServerResponse("Rental created !"));
-      
-    }
 
-	
-	
+	}
+
 	@GetMapping("/rentals/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public RentalDto getRentalById(@PathVariable Integer id) {
-        Rental rental = rentalService.getRentalById(id);
-        return rentalMapping.mapRentalToRentalDto(rental);
-    }
-	
-	
-	private final UserService userService;
-	
+	@ResponseStatus(HttpStatus.OK)
+	public RentalDto getRentalById(@PathVariable Integer id) {
+		Rental rental = rentalService.getRentalById(id);
+		return rentalMapping.mapRentalToRentalDto(rental);
+	}
 
+	private final UserService userService;
 
 	@GetMapping("/rentals")
-    public RentalResponse getRentals(final Principal principal) {
+	public RentalResponse getRentals(final Principal principal) {
 		String emailAddressUser = principal.getName();
-		final User user=userService.findByEmail(emailAddressUser);
-        List<Rental> rentals =  rentalService.getRentalsByUserId(user.getId());
-        RentalResponse rentalResponse = new RentalResponse();
-        List<RentalDto>rentalDtos = new ArrayList();
-        rentals.stream().forEach(rental -> {
-        	final RentalDto rentalDto=rentalMapping.mapRentalToRentalDto(rental);
-        	
-        	rentalDtos.add(rentalDto);
-        });
-        rentalResponse.setRentals(rentalDtos);
-        return rentalResponse;
-    }
-	
-	
-	
+		final User user = userService.findByEmail(emailAddressUser);
+		List<Rental> rentals = rentalService.getRentalsByUserId(user.getId());
+		RentalResponse rentalResponse = new RentalResponse();
+		List<RentalDto> rentalDtos = new ArrayList();
+		rentals.stream().forEach(rental -> {
+			final RentalDto rentalDto = rentalMapping.mapRentalToRentalDto(rental);
+
+			rentalDtos.add(rentalDto);
+		});
+		rentalResponse.setRentals(rentalDtos);
+		return rentalResponse;
+	}
+
 	@PutMapping("/rentals/{id}")
-    public ResponseEntity<ServerResponse> update(@PathVariable Integer id,final @RequestPart("name") String name,
-            final @RequestPart("surface") String surface,
-            final @RequestPart("price") String price,
-            final @RequestPart("description") String description) throws IOException, java.io.IOException {
+	public ResponseEntity<ServerResponse> update(@PathVariable Integer id, final @RequestPart("name") String name,
+			final @RequestPart("surface") String surface, final @RequestPart("price") String price,
+			final @RequestPart("description") String description) throws IOException, java.io.IOException {
 		log.info("Début de la modification de rental");
-		
+
 		/*
 		 * l'objet RentalRequest est posté par le FrontEnd et reçu par le controller
 		 */
-		
-		
+
 		final RentalRequest rentalRequest = new RentalRequest();
 		rentalRequest.setName(name);
 		rentalRequest.setPrice(NumberUtils.convertToFloat(price));
 		rentalRequest.setDescription(description);
 		rentalRequest.setSurface(NumberUtils.convertToFloat(surface));
 		final Rental rental = rentalService.getRentalById(id);
-		final Rental rentalResultMapping = rentalMapping.mapRentalRequestToRentalForUpdate(rental,rentalRequest);
-		
-		
-		rentalService.save(rentalResultMapping);
-		
-		return ResponseEntity.ok(new ServerResponse("Rental updated !"));
-      
-    }
-	
+		final Rental rentalResultMapping = rentalMapping.mapRentalRequestToRentalForUpdate(rental, rentalRequest);
 
-	
-	
-	
-	
+		rentalService.save(rentalResultMapping);
+
+		return ResponseEntity.ok(new ServerResponse("Rental updated !"));
+
+	}
+
 }

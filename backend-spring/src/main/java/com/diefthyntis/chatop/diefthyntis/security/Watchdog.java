@@ -19,24 +19,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.diefthyntis.chatop.diefthyntis.utils.JwtUtils;
 
-
-
-/*
- What we do inside doFilterInternal():
-– get JWT from the Authorization header (by removing Bearer prefix)
-– if the request has JWT, validate it, parse username from it
-– from username, get UserDetails to create an Authentication object
-– set the current UserDetails in SecurityContext using setAuthentication(authentication) method.
- */
-
 /*
  En résumé, ce filtre vérifie la présence et la validité d'un JWT dans chaque requête HTTP entrante. 
  Si le JWT est valide, il extrait les détails de l'utilisateur, 
  crée un objet d'authentification et l'authentifie dans le contexte de sécurité de Spring. 
  Cela permet de sécuriser les routes de l'application en vérifiant les autorisations des utilisateurs à chaque requête.
  */
-
-
 
 /*
  * @Autowired annotation pour injecter de dépendances (rien à voir avec les dépendances de pom.xml)
@@ -47,7 +35,7 @@ import com.diefthyntis.chatop.diefthyntis.utils.JwtUtils;
  */
 
 public class Watchdog extends OncePerRequestFilter {
-	
+
 	@Autowired
 	private JwtUtils jwtUtils;
 	// comme on teste rarement les filtres, on peut tolerer l'injection par champ

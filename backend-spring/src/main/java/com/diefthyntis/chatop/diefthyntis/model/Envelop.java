@@ -20,30 +20,29 @@ import lombok.Data;
 @Data
 public class Envelop {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
 	@NotBlank
-    @Size(max = 120)
-    private String word;
-	
+	@Size(max = 120)
+	private String word;
+
 	@ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-	
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	private User user;
+
 	@ManyToOne
-    @JoinColumn(name = "rental_id", referencedColumnName = "id")
-    private Rental rental;
-	
-	
-	 @Column(name = "created_at")
-	    private java.time.LocalDateTime createdAt;
-	    
-	    @Column(name = "updated_at")
-	    private java.time.LocalDateTime updatedAt;
-	    
-	    public Envelop(){
-	    	updatedAt=LocalDateTime.now();
-	    	createdAt = LocalDateTime.now();
-	    }
+	@JoinColumn(name = "rental_id", referencedColumnName = "id")
+	private Rental rental;
+
+	@Column(name = "created_at")
+	private java.time.LocalDateTime createdAt;
+
+	@Column(name = "updated_at")
+	private java.time.LocalDateTime updatedAt;
+
+	public Envelop() {
+		updatedAt = LocalDateTime.now();
+		createdAt = LocalDateTime.now();
+	}
 }

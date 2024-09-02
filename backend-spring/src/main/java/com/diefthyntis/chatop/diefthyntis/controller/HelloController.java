@@ -9,8 +9,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class HelloController {
 	@GetMapping("/titi")
-    public String sayhelloworld() {
-		// ? signifie la généricité, donc je peux passer n'importe quel type d'objet dans la méthode responseEntity.ok
+	public String sayhelloworld() {
+		// ? signifie la généricité, donc je peux passer n'importe quel type d'objet
+		// dans la méthode responseEntity.ok
 		return "hello world";
 	}
 }

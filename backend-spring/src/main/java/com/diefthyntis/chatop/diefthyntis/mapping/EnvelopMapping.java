@@ -32,15 +32,15 @@ import lombok.RequiredArgsConstructor;
 public class EnvelopMapping {
 	private final UserService userService;
 	private final RentalService rentalService;
-	public Envelop mapEnvelopRequestToEnvelop(EnvelopRequest envelopRequest)
-	{
+
+	public Envelop mapEnvelopRequestToEnvelop(EnvelopRequest envelopRequest) {
 		final Envelop envelop = new Envelop();
 		envelop.setWord(envelopRequest.getWord());
 		User user = userService.getUserById(NumberUtils.convertToInteger(envelopRequest.getUser_id()));
 		envelop.setUser(user);
-		Rental rental=rentalService.getRentalById(NumberUtils.convertToInteger(envelopRequest.getRental_id()));
+		Rental rental = rentalService.getRentalById(NumberUtils.convertToInteger(envelopRequest.getRental_id()));
 		envelop.setRental(rental);
-		
+
 		return envelop;
 	}
 

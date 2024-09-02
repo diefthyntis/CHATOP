@@ -12,15 +12,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 	private final UserRepository userRepository;
+
 	public User save(User user) {
 		return userRepository.save(user);
 	}
-	
-	public Boolean existsByEmailAddress(final String emailAddress){
+
+	public Boolean existsByEmailAddress(final String emailAddress) {
 		return userRepository.existsByEmail(emailAddress);
-		
+
 	}
-	
+
 	public User getUserById(Integer id) {
 		return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 	}
@@ -29,5 +30,4 @@ public class UserService {
 		return userRepository.findByEmail(emailAddress).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 	}
 
-	
 }

@@ -1,8 +1,5 @@
 package com.diefthyntis.chatop.diefthyntis.security;
 
-
-
-
 /*
  * WebSecurityConfig is the crux of our security implementation. 
  * It configures cors, csrf, session management, rules for protected resources. 
@@ -23,8 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
-
 /*
  – @EnableWebSecurity allows Spring to find and automatically apply the class to the global Web Security.
 
@@ -43,7 +38,6 @@ So it has UserDetailsService interface that we need to implement.
 
 – We also need a PasswordEncoder for the DaoAuthenticationProvider. If we don’t specify, it will use plain text.
  */
-
 
 /*
  En résumé, ce code configure Spring Security pour :
@@ -154,13 +148,12 @@ public class Brain {
 	 */
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.csrf(csrf -> csrf.disable())
-				.exceptionHandling(exception -> exception.authenticationEntryPoint(closedDoor))
+		http.csrf(csrf -> csrf.disable()).exceptionHandling(exception -> exception.authenticationEntryPoint(closedDoor))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").
-						permitAll().requestMatchers("/api/images/**").permitAll().
-						requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
-			.anyRequest().authenticated());
+				.authorizeHttpRequests(
+						auth -> auth.requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/images/**")
+								.permitAll().requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**")
+								.permitAll().anyRequest().authenticated());
 
 		http.authenticationProvider(authenticationProvider());
 

@@ -1,8 +1,5 @@
 package com.diefthyntis.chatop.diefthyntis.controller;
 
-
-
-
 import java.security.Principal;
 import java.util.Optional;
 
@@ -45,8 +42,6 @@ import lombok.extern.slf4j.Slf4j;
  * L'information de l'utilisateur connecté est disponible dans l'interface Principal
  */
 
-
-
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -54,22 +49,21 @@ import lombok.extern.slf4j.Slf4j;
 public class EnvelopController {
 	private final EnvelopService envelopService;
 	private final EnvelopMapping envelopMapping;
-	
+
 	@PostMapping("/messages")
-    public ResponseEntity<ServerResponse> create(final @RequestBody EnvelopRequest envelopRequest) throws IOException, java.io.IOException {
+	public ResponseEntity<ServerResponse> create(final @RequestBody EnvelopRequest envelopRequest)
+			throws IOException, java.io.IOException {
 		log.info("debut de la creation de envelop");
-			
+
 		/*
 		 * l'objet EnvelopRequest est posté par le FrontEnd et reçu par le controller
 		 */
-		
+
 		final Envelop envelop = envelopMapping.mapEnvelopRequestToEnvelop(envelopRequest);
 		envelopService.save(envelop);
-			
-		
+
 		return ResponseEntity.ok(new ServerResponse("Message send with success"));
-      
-    }
-	
-	
+
+	}
+
 }

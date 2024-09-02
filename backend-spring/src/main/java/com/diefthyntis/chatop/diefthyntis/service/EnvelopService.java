@@ -15,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EnvelopService {
 
-private final EnvelopRepository envelopRepository;
-	
+	private final EnvelopRepository envelopRepository;
+
 	public void save(Envelop envelop) {
 		envelopRepository.save(envelop);
 	}

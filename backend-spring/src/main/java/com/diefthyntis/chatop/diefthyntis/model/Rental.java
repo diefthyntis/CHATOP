@@ -16,7 +16,7 @@ import lombok.Data;
 
 /*
  * L'ordre des annotations n'a pas d'importance
- * L'interpréteur d'annotation les traites dans l'ordre qui vient sans importance
+ * L'interpréteur d'annotation les traite dans l'ordre qui vient sans importance
  */
 @Data
 @Entity

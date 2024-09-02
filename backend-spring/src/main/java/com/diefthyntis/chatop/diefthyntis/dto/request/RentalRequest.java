@@ -15,5 +15,5 @@ public class RentalRequest {
 	private String picture;
 	private String description;
 	private String emailAddressOwner;
-	
+
 }

@@ -33,7 +33,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
  */
 import org.springframework.stereotype.Component;
 
-
 /*
  ================================================================================
  La classe AuthEntryPointJwt est un point d'entrée d'authentification personnalisé 
@@ -56,22 +55,23 @@ ces événements pour une analyse ultérieure.
 @Component
 public class ClosedDoor implements AuthenticationEntryPoint {
 
-  private static final Logger logger = LoggerFactory.getLogger(ClosedDoor.class);
+	private static final Logger logger = LoggerFactory.getLogger(ClosedDoor.class);
 
-  /*
-   Cette méthode est invoquée chaque fois qu'une exception d'authentification est levée. 
-   Elle prend en paramètres la requête HTTP, la réponse HTTP, et l'exception d'authentification.
-   */
-  @Override
-  public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
-      throws IOException, ServletException {
-    logger.error("Unauthorized error: {}", authException.getMessage());
-    
-    
-    /*
-     Cette ligne envoie une réponse HTTP 401 (Non autorisé) avec un message d'erreur "Error: Unauthorized". 
-     Cela signifie que la requête n'a pas pu être authentifiée et que l'accès à la ressource demandée est refusé.
-     */
-    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
-  }
+	/*
+	 * Cette méthode est invoquée chaque fois qu'une exception d'authentification
+	 * est levée. Elle prend en paramètres la requête HTTP, la réponse HTTP, et
+	 * l'exception d'authentification.
+	 */
+	@Override
+	public void commence(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException authException) throws IOException, ServletException {
+		logger.error("Unauthorized error: {}", authException.getMessage());
+
+		/*
+		 * Cette ligne envoie une réponse HTTP 401 (Non autorisé) avec un message
+		 * d'erreur "Error: Unauthorized". Cela signifie que la requête n'a pas pu être
+		 * authentifiée et que l'accès à la ressource demandée est refusé.
+		 */
+		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
+	}
 }
