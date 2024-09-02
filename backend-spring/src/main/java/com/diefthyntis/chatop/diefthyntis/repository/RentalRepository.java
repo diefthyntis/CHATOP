@@ -24,14 +24,4 @@ public interface RentalRepository extends JpaRepository<Rental, Integer> {
 	
 	List<Rental> findByowner_id(Integer ownerId);
 	
-	/*
-	  @Modifying
-	    @Transactional
-	    @Query("UPDATE rentals e SET e.name = :name, e.surface = :surface, e.price = :price, e.description = :description WHERE e.id = :id")
-	    Integer update(@Param("id") String id, 
-	                         @Param("name") String name, 
-	                         @Param("surface") String surface, 
-	                         @Param("price") String price, 
-	                         @Param("description") String description);
-	                        */
 }
