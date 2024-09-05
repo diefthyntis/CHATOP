@@ -7,7 +7,8 @@ import lombok.Data;
  * une instance de la classe RentalResponse 
  */
 @Data
-public class RentalDto {
+
+public class RentalBtf {
 	private Integer id;
 	private String name;
 	private Float surface;

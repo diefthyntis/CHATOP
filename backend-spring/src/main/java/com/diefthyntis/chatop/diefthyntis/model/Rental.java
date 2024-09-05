@@ -28,7 +28,8 @@ public class Rental {
 
 	@NotBlank
 	@Size(max = 20)
-	private String name;
+	@Column(name = "name")
+	private String castlename;
 
 	@Column(name = "surface")
 	private Float surface;
@@ -37,7 +38,7 @@ public class Rental {
 	private Float price;
 
 	@Column(name = "picture")
-	private String picture;
+	private String timepicturename;
 
 	@Column(name = "description")
 	private String description;
@@ -47,13 +48,13 @@ public class Rental {
 	private User owner;
 
 	@Column(name = "created_at")
-	private java.time.LocalDateTime createdAt;
+	private java.time.LocalDateTime createdat;
 
 	@Column(name = "updated_at")
-	private java.time.LocalDateTime updatedAt;
+	private java.time.LocalDateTime updatedat;
 
 	public Rental() {
-		updatedAt = LocalDateTime.now();
-		createdAt = LocalDateTime.now();
+		updatedat = LocalDateTime.now();
+		createdat = LocalDateTime.now();
 	}
 }

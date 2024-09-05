@@ -9,11 +9,13 @@ import lombok.Data;
  */
 @Data
 public class RentalRequest {
-	private String name;
-	private float surface;
-	private float price;
-	private String picture;
+	private String castlename;
+	private String surface;
+	private String price;
+	private MultipartFile pictureobject;
 	private String description;
 	private String emailAddressOwner;
-
+	private String nativepicturefilename;
+	private Integer id;
 }
+
