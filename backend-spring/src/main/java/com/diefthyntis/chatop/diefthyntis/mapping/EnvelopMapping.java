@@ -35,7 +35,7 @@ public class EnvelopMapping {
 
 	public Envelop mapEnvelopRequestToEnvelop(EnvelopRequest envelopRequest) {
 		final Envelop envelop = new Envelop();
-		envelop.setWord(envelopRequest.getWord());
+		envelop.setMessage(envelopRequest.getMessage());
 		User user = userService.getUserById(NumberUtils.convertToInteger(envelopRequest.getUser_id()));
 		envelop.setUser(user);
 		Rental rental = rentalService.getRentalById(NumberUtils.convertToInteger(envelopRequest.getRental_id()));

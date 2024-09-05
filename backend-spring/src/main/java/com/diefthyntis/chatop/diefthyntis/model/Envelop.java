@@ -25,7 +25,8 @@ public class Envelop {
 
 	@NotBlank
 	@Size(max = 120)
-	private String word;
+	@Column(name = "word")
+	private String message;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
