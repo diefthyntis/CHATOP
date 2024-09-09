@@ -38,14 +38,14 @@ public class Rental {
 	private Float price;
 
 	@Column(name = "picture")
-	private String timepicturename;
+	private String picturefilename;
 
 	@Column(name = "description")
 	private String description;
 
 	@ManyToOne
 	@JoinColumn(name = "owner_id", referencedColumnName = "id")
-	private User owner;
+	private User user;
 
 	@Column(name = "created_at")
 	private java.time.LocalDateTime createdat;

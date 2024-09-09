@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.diefthyntis.chatop.diefthyntis.dto.request.RentalFtb;
 import com.diefthyntis.chatop.diefthyntis.dto.request.RentalRequest;
+import com.diefthyntis.chatop.diefthyntis.dto.response.ManyRentalResponse;
 import com.diefthyntis.chatop.diefthyntis.dto.response.RentalBtf;
 import com.diefthyntis.chatop.diefthyntis.dto.response.RentalResponse;
 import com.diefthyntis.chatop.diefthyntis.dto.response.ServerResponse;
@@ -59,7 +60,11 @@ public class RentalController {
 	private final RentalService rentalService;
 
 	
-	private final RentalMapping rentalMapping;
+	/*
+	 * déplacement du traitement métier dans le service
+	 * private final RentalMapping rentalMapping;
+	 */
+	
 
 	
 
@@ -105,32 +110,61 @@ public class RentalController {
 		rentalRequest.setDescription(description);
 		rentalRequest.setSurface(surface);
 		rentalRequest.setPictureobject(picture);
-		rentalRequest.setEmailAddressOwner(emailAddressOwner);
-		rentalRequest.setNativepicturefilename(filename);
-		final RentalFtb rentalFtb = rentalMapping.mapRentalRequestToRentalFtbForSave(rentalRequest);
-		
-		
+		rentalRequest.setEmailaddress(emailAddressOwner);
 		
 		/*
+		 * 09/09/2024
+		 * Déplacement du traitement métier dans le service
+		 */
+		/*
+		rentalRequest.setEmailAddressOwner(emailAddressOwner);
+		rentalRequest.setNativepicturefilename(filename);
+		
+		final RentalFtb rentalFtb = rentalMapping.mapRentalRequestToRentalFtbForSave(rentalRequest);
+		 * 
+		 * 
 		 * on est obligé de récupérer le rental crée pour obtenir l'id qui sert à
 		 * constuire le nom de l'image
-		 */
+		 
 		final Rental rental = rentalService.saveFtb(rentalFtb);
+		 */
+		
+		
+		
+		
+		final Rental rental = rentalService.save(rentalRequest);
 		
 
 		return ResponseEntity.ok(new ServerResponse("Rental created !"));
 
 	}
 
+	/*
+	 * 09/09/2024
+	 * Déplacement du traitement métier dans le service
+	
 	@GetMapping("/rentals/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public RentalBtf getRentalById(@PathVariable Integer id) {
 		Rental rental = rentalService.getRentalById(id);
 		return rentalMapping.mapRentalToRentalBtf(rental);
 	}
+	 */
+	@GetMapping("/rentals/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public RentalResponse getRentalById(@PathVariable Integer id) {
+		return rentalService.getRentalResponseById(id);
+		
+	}
+	
+	
 
 	private final UserService userService;
 
+
+	/*
+	 * 09/09/2024
+	 * Déplacement du traitement métier dans le service
 	@GetMapping("/rentals")
 	public RentalResponse getRentals(final Principal principal) {
 		String emailAddressUser = principal.getName();
@@ -146,16 +180,28 @@ public class RentalController {
 		rentalResponse.setRentals(rentalBtfs);
 		return rentalResponse;
 	}
+	*/
+	@GetMapping("/rentals")
+	public ManyRentalResponse getRentals(final Principal principal) {
+		String emailaddress = principal.getName();
+		final List<RentalResponse> rentalResponseList =  rentalService.getRentalResponseListByEmailaddress(emailaddress);
+		final ManyRentalResponse manyRentalResponse = new ManyRentalResponse();
+		manyRentalResponse.setRentalResponseList(rentalResponseList);
+		return manyRentalResponse;
+	}
 
+	
+	/*
+	 * l'objet RentalRequest est posté par le FrontEnd et reçu par le controller
+	 */
+
+	
+/*
 	@PutMapping("/rentals/{id}")
 	public ResponseEntity<ServerResponse> update(@PathVariable Integer id, final @RequestPart("name") String name,
 			final @RequestPart("surface") String surface, final @RequestPart("price") String price,
 			final @RequestPart("description") String description) throws IOException, java.io.IOException {
 		log.info("Début de la modification de rental");
-
-		/*
-		 * l'objet RentalRequest est posté par le FrontEnd et reçu par le controller
-		 */
 
 		final RentalRequest rentalRequest = new RentalRequest();
 		rentalRequest.setCastlename(name);
@@ -166,6 +212,25 @@ public class RentalController {
 		final RentalFtb rentalDto = rentalMapping.mapRentalRequestToRentalFtbForUpdate(rentalRequest);
 
 		rentalService.updateFtb(rentalDto);
+
+		return ResponseEntity.ok(new ServerResponse("Rental updated !"));
+
+	}
+*/
+
+	@PutMapping("/rentals/{id}")
+	public ResponseEntity<ServerResponse> update(@PathVariable Integer id, final @RequestPart("name") String name,
+			final @RequestPart("surface") String surface, final @RequestPart("price") String price,
+			final @RequestPart("description") String description) throws IOException, java.io.IOException {
+		log.info("Début de la modification de rental");
+
+		final RentalRequest rentalRequest = new RentalRequest();
+		rentalRequest.setCastlename(name);
+		rentalRequest.setPrice(price);
+		rentalRequest.setDescription(description);
+		rentalRequest.setSurface(surface);
+		rentalRequest.setId(id);
+		rentalService.update(rentalRequest);
 
 		return ResponseEntity.ok(new ServerResponse("Rental updated !"));
 

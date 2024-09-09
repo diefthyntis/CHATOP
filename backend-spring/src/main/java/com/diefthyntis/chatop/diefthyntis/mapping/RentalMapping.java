@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import com.diefthyntis.chatop.diefthyntis.dto.request.RentalFtb;
 import com.diefthyntis.chatop.diefthyntis.dto.request.RentalRequest;
 import com.diefthyntis.chatop.diefthyntis.dto.response.RentalBtf;
-
+import com.diefthyntis.chatop.diefthyntis.dto.response.RentalResponse;
 import com.diefthyntis.chatop.diefthyntis.model.Rental;
 
 import com.diefthyntis.chatop.diefthyntis.utils.DateUtils;
@@ -26,6 +26,7 @@ public class RentalMapping {
 	
 
 
+	/*
 	
 	public RentalFtb mapRentalRequestToRentalFtbForSave(RentalRequest rentalRequest) {
 		final RentalFtb rentalFtb = new RentalFtb();
@@ -38,6 +39,7 @@ public class RentalMapping {
 		rentalFtb.setNativepicturefilename(rentalRequest.getNativepicturefilename());
 		return rentalFtb;
 	}
+	*/
 
 	public RentalFtb mapRentalRequestToRentalFtbForUpdate(final RentalRequest rentalRequest) {
 		final RentalFtb rentalFtb = new RentalFtb();
@@ -51,6 +53,7 @@ public class RentalMapping {
 	}
 	
 
+	/*
 	public RentalBtf mapRentalToRentalBtf(Rental rental) {
 		final RentalBtf rentalBtf = new RentalBtf();
 		rentalBtf.setId(rental.getId());
@@ -66,5 +69,43 @@ public class RentalMapping {
 		rentalBtf.setUpdated_at(DateUtils.convertLocalDateToString(rental.getCreatedat()));
 		
 		return rentalBtf;
+	}
+	*/
+	
+	/*
+	 * 09/09/2024
+	 * Nouvelle méthode pour déplacer le traitement métier dans le service
+	 */
+	public Rental mapRentalRequestToRental(RentalRequest rentalRequest) {
+		final Rental rental = new Rental();
+		rental.setCastlename(rentalRequest.getCastlename());
+		rental.setSurface(NumberUtils.convertToFloat(rentalRequest.getSurface()));
+		rental.setPrice(NumberUtils.convertToFloat(rentalRequest.getPrice()));
+		rental.setDescription(rentalRequest.getDescription());
+		return rental;
+	}
+
+	/*
+	 * 09/09/2024
+	 */
+	public RentalResponse mapRentalToRentalResponse(Rental rental) {
+		final RentalResponse rentalResponse = new RentalResponse();
+		rentalResponse.setId(rental.getId());
+		rentalResponse.setDescription(rental.getDescription());
+		rentalResponse.setOwner_id(rental.getUser().getId());
+		rentalResponse.setName(rental.getCastlename());
+		
+		final String urlPicture = "http://localhost:3001/api/images/" + rental.getId() + "/" + rental.getPicturefilename();
+		rentalResponse.setPicture(urlPicture);
+		
+		rentalResponse.setPicture(rental.getPicturefilename());
+		
+		rentalResponse.setPrice(rental.getPrice());
+		rentalResponse.setSurface(rental.getSurface());
+		
+		rentalResponse.setCreated_at(DateUtils.convertLocalDateToString(rental.getCreatedat()));
+		rentalResponse.setUpdated_at(DateUtils.convertLocalDateToString(rental.getCreatedat()));
+		
+		return rentalResponse;
 	}
 }

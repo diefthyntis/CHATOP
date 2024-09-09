@@ -14,8 +14,8 @@ public class RentalRequest {
 	private String price;
 	private MultipartFile pictureobject;
 	private String description;
-	private String emailAddressOwner;
-	private String nativepicturefilename;
+	private String emailaddress;
+	private String picturefilename;
 	private Integer id;
 }
 
