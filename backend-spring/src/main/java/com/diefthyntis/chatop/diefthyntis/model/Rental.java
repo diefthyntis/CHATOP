@@ -45,7 +45,7 @@ public class Rental {
 
 	@ManyToOne
 	@JoinColumn(name = "owner_id", referencedColumnName = "id")
-	private User user;
+	private User owner;
 
 	@Column(name = "created_at")
 	private java.time.LocalDateTime createdat;

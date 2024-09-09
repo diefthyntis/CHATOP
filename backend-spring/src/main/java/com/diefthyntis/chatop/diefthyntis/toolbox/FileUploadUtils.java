@@ -1,4 +1,4 @@
-package com.diefthyntis.chatop.diefthyntis.utils;
+package com.diefthyntis.chatop.diefthyntis.toolbox;
 
 import java.io.InputStream;
 import java.nio.file.Files;

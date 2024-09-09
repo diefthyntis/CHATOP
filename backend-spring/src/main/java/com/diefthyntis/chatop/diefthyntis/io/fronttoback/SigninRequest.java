@@ -1,4 +1,4 @@
-package com.diefthyntis.chatop.diefthyntis.dto.request;
+package com.diefthyntis.chatop.diefthyntis.io.fronttoback;
 
 import lombok.Data;
 

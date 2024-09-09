@@ -1,4 +1,4 @@
-package com.diefthyntis.chatop.diefthyntis.utils;
+package com.diefthyntis.chatop.diefthyntis.toolbox;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

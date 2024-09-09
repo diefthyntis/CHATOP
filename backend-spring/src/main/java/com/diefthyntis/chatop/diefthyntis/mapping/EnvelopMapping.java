@@ -2,16 +2,16 @@ package com.diefthyntis.chatop.diefthyntis.mapping;
 
 import org.springframework.stereotype.Component;
 
-import com.diefthyntis.chatop.diefthyntis.dto.request.EnvelopRequest;
-import com.diefthyntis.chatop.diefthyntis.dto.request.RentalRequest;
-import com.diefthyntis.chatop.diefthyntis.dto.response.UserResponse;
+import com.diefthyntis.chatop.diefthyntis.io.backtofront.UserResponse;
+import com.diefthyntis.chatop.diefthyntis.io.fronttoback.EnvelopRequest;
+import com.diefthyntis.chatop.diefthyntis.io.fronttoback.RentalRequest;
 import com.diefthyntis.chatop.diefthyntis.model.Envelop;
 import com.diefthyntis.chatop.diefthyntis.model.Rental;
 import com.diefthyntis.chatop.diefthyntis.model.User;
 import com.diefthyntis.chatop.diefthyntis.service.RentalService;
 import com.diefthyntis.chatop.diefthyntis.service.UserService;
-import com.diefthyntis.chatop.diefthyntis.utils.DateUtils;
-import com.diefthyntis.chatop.diefthyntis.utils.NumberUtils;
+import com.diefthyntis.chatop.diefthyntis.toolbox.DateUtils;
+import com.diefthyntis.chatop.diefthyntis.toolbox.NumberUtils;
 
 import lombok.RequiredArgsConstructor;
 

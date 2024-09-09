@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.diefthyntis.chatop.diefthyntis.dto.request.RegisterRequest;
-import com.diefthyntis.chatop.diefthyntis.dto.request.SigninRequest;
 import com.diefthyntis.chatop.diefthyntis.exception.EmailAddressAlreadyExistsException;
+import com.diefthyntis.chatop.diefthyntis.io.fronttoback.RegisterRequest;
+import com.diefthyntis.chatop.diefthyntis.io.fronttoback.SigninRequest;
 import com.diefthyntis.chatop.diefthyntis.model.User;
 import com.diefthyntis.chatop.diefthyntis.security.JwtToken;
 import com.diefthyntis.chatop.diefthyntis.service.UserService;
-import com.diefthyntis.chatop.diefthyntis.utils.JwtUtils;
+import com.diefthyntis.chatop.diefthyntis.toolbox.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
 

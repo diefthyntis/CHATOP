@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.diefthyntis.chatop.diefthyntis.utils.JwtUtils;
+import com.diefthyntis.chatop.diefthyntis.toolbox.JwtUtils;
 
 /*
  En résumé, ce filtre vérifie la présence et la validité d'un JWT dans chaque requête HTTP entrante. 

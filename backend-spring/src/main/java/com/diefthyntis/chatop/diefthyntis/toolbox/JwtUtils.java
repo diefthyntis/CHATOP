@@ -49,7 +49,7 @@ En résumé, la classe JwtUtils fournit des méthodes pour générer des tokens 
 =========================================================================================
  */
 
-package com.diefthyntis.chatop.diefthyntis.utils;
+package com.diefthyntis.chatop.diefthyntis.toolbox;
 
 import java.security.Key;
 import java.util.Date;

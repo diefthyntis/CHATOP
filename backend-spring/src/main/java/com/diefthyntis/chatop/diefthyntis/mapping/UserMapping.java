@@ -2,9 +2,9 @@ package com.diefthyntis.chatop.diefthyntis.mapping;
 
 import org.springframework.stereotype.Component;
 
-import com.diefthyntis.chatop.diefthyntis.dto.response.UserResponse;
+import com.diefthyntis.chatop.diefthyntis.io.backtofront.UserResponse;
 import com.diefthyntis.chatop.diefthyntis.model.User;
-import com.diefthyntis.chatop.diefthyntis.utils.DateUtils;
+import com.diefthyntis.chatop.diefthyntis.toolbox.DateUtils;
 
 @Component
 public class UserMapping {

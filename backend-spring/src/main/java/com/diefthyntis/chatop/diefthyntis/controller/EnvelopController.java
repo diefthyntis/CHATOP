@@ -13,15 +13,12 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.diefthyntis.chatop.diefthyntis.dto.request.EnvelopRequest;
-import com.diefthyntis.chatop.diefthyntis.dto.response.ServerResponse;
-import com.diefthyntis.chatop.diefthyntis.exception.MissingFileException;
+import com.diefthyntis.chatop.diefthyntis.io.backtofront.ServerResponse;
+import com.diefthyntis.chatop.diefthyntis.io.fronttoback.EnvelopRequest;
 import com.diefthyntis.chatop.diefthyntis.mapping.EnvelopMapping;
-import com.diefthyntis.chatop.diefthyntis.model.Envelop;
+
 import com.diefthyntis.chatop.diefthyntis.service.EnvelopService;
-import com.diefthyntis.chatop.diefthyntis.utils.FileUploadUtils;
-import com.diefthyntis.chatop.diefthyntis.utils.FileUtils;
-import com.diefthyntis.chatop.diefthyntis.utils.NumberUtils;
+
 
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EnvelopController {
 	private final EnvelopService envelopService;
-	private final EnvelopMapping envelopMapping;
+	
 
 	@PostMapping("/messages")
 	public ResponseEntity<ServerResponse> create(final @RequestBody EnvelopRequest envelopRequest)
@@ -59,8 +56,7 @@ public class EnvelopController {
 		 * l'objet EnvelopRequest est posté par le FrontEnd et reçu par le controller
 		 */
 
-		final Envelop envelop = envelopMapping.mapEnvelopRequestToEnvelop(envelopRequest);
-		envelopService.save(envelop);
+		envelopService.save(envelopRequest);
 
 		return ResponseEntity.ok(new ServerResponse("Message send with success"));
 

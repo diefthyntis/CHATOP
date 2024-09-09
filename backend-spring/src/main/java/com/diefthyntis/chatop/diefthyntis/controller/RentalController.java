@@ -1,11 +1,11 @@
 package com.diefthyntis.chatop.diefthyntis.controller;
 
 import java.security.Principal;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -20,16 +20,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.diefthyntis.chatop.diefthyntis.dto.request.RentalFtb;
-import com.diefthyntis.chatop.diefthyntis.dto.request.RentalRequest;
-import com.diefthyntis.chatop.diefthyntis.dto.response.ManyRentalResponse;
-import com.diefthyntis.chatop.diefthyntis.dto.response.RentalBtf;
-import com.diefthyntis.chatop.diefthyntis.dto.response.RentalResponse;
-import com.diefthyntis.chatop.diefthyntis.dto.response.ServerResponse;
 import com.diefthyntis.chatop.diefthyntis.exception.MissingFileException;
-import com.diefthyntis.chatop.diefthyntis.mapping.RentalMapping;
+import com.diefthyntis.chatop.diefthyntis.io.backtofront.RentalResponse;
+import com.diefthyntis.chatop.diefthyntis.io.backtofront.RentalDto;
+import com.diefthyntis.chatop.diefthyntis.io.backtofront.ServerResponse;
+import com.diefthyntis.chatop.diefthyntis.io.fronttoback.RentalRequest;
 import com.diefthyntis.chatop.diefthyntis.model.Rental;
-import com.diefthyntis.chatop.diefthyntis.model.User;
 import com.diefthyntis.chatop.diefthyntis.service.RentalService;
 import com.diefthyntis.chatop.diefthyntis.service.UserService;
 
@@ -60,12 +56,6 @@ public class RentalController {
 	private final RentalService rentalService;
 
 	
-	/*
-	 * déplacement du traitement métier dans le service
-	 * private final RentalMapping rentalMapping;
-	 */
-	
-
 	
 
 	@PostMapping("/rentals")
@@ -111,24 +101,8 @@ public class RentalController {
 		rentalRequest.setSurface(surface);
 		rentalRequest.setPictureobject(picture);
 		rentalRequest.setEmailaddress(emailAddressOwner);
-		
-		/*
-		 * 09/09/2024
-		 * Déplacement du traitement métier dans le service
-		 */
-		/*
-		rentalRequest.setEmailAddressOwner(emailAddressOwner);
-		rentalRequest.setNativepicturefilename(filename);
-		
-		final RentalFtb rentalFtb = rentalMapping.mapRentalRequestToRentalFtbForSave(rentalRequest);
-		 * 
-		 * 
-		 * on est obligé de récupérer le rental crée pour obtenir l'id qui sert à
-		 * constuire le nom de l'image
-		 
-		final Rental rental = rentalService.saveFtb(rentalFtb);
-		 */
-		
+		rentalRequest.setPicturefilename(filename);
+			
 		
 		
 		
@@ -139,21 +113,11 @@ public class RentalController {
 
 	}
 
-	/*
-	 * 09/09/2024
-	 * Déplacement du traitement métier dans le service
 	
 	@GetMapping("/rentals/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public RentalBtf getRentalById(@PathVariable Integer id) {
-		Rental rental = rentalService.getRentalById(id);
-		return rentalMapping.mapRentalToRentalBtf(rental);
-	}
-	 */
-	@GetMapping("/rentals/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public RentalResponse getRentalById(@PathVariable Integer id) {
-		return rentalService.getRentalResponseById(id);
+	public RentalDto getRentalById(@PathVariable Integer id) {
+		return rentalService.getRentalBackToFrontById(id);
 		
 	}
 	
@@ -162,67 +126,24 @@ public class RentalController {
 	private final UserService userService;
 
 
-	/*
-	 * 09/09/2024
-	 * Déplacement du traitement métier dans le service
+	
 	@GetMapping("/rentals")
 	public RentalResponse getRentals(final Principal principal) {
-		String emailAddressUser = principal.getName();
-		final User user = userService.findByEmail(emailAddressUser);
-		List<Rental> rentals = rentalService.getRentalsByUserId(user.getId());
-		RentalResponse rentalResponse = new RentalResponse();
-		List<RentalBtf> rentalBtfs = new ArrayList();
-		rentals.stream().forEach(rental -> {
-			final RentalBtf rentalBtf = rentalMapping.mapRentalToRentalBtf(rental);
-
-			rentalBtfs.add(rentalBtf);
-		});
-		rentalResponse.setRentals(rentalBtfs);
-		return rentalResponse;
-	}
-	*/
-	@GetMapping("/rentals")
-	public ManyRentalResponse getRentals(final Principal principal) {
 		String emailaddress = principal.getName();
-		final List<RentalResponse> rentalResponseList =  rentalService.getRentalResponseListByEmailaddress(emailaddress);
-		final ManyRentalResponse manyRentalResponse = new ManyRentalResponse();
-		manyRentalResponse.setRentalResponseList(rentalResponseList);
-		return manyRentalResponse;
+		final List<RentalDto> RentalBackToFrontList =  rentalService.getRentalBackToFrontListByEmailaddress(emailaddress);
+		final RentalResponse manyRentalBackToFront = new RentalResponse();
+		manyRentalBackToFront.setRentals(RentalBackToFrontList);
+		return manyRentalBackToFront;
 	}
 
 	
-	/*
-	 * l'objet RentalRequest est posté par le FrontEnd et reçu par le controller
-	 */
-
 	
-/*
-	@PutMapping("/rentals/{id}")
-	public ResponseEntity<ServerResponse> update(@PathVariable Integer id, final @RequestPart("name") String name,
-			final @RequestPart("surface") String surface, final @RequestPart("price") String price,
-			final @RequestPart("description") String description) throws IOException, java.io.IOException {
-		log.info("Début de la modification de rental");
-
-		final RentalRequest rentalRequest = new RentalRequest();
-		rentalRequest.setCastlename(name);
-		rentalRequest.setPrice(price);
-		rentalRequest.setDescription(description);
-		rentalRequest.setSurface(surface);
-		rentalRequest.setId(id);
-		final RentalFtb rentalDto = rentalMapping.mapRentalRequestToRentalFtbForUpdate(rentalRequest);
-
-		rentalService.updateFtb(rentalDto);
-
-		return ResponseEntity.ok(new ServerResponse("Rental updated !"));
-
-	}
-*/
 
 	@PutMapping("/rentals/{id}")
 	public ResponseEntity<ServerResponse> update(@PathVariable Integer id, final @RequestPart("name") String name,
 			final @RequestPart("surface") String surface, final @RequestPart("price") String price,
 			final @RequestPart("description") String description) throws IOException, java.io.IOException {
-		log.info("Début de la modification de rental");
+		log.info("RentalController - Début de la modification de rental");
 
 		final RentalRequest rentalRequest = new RentalRequest();
 		rentalRequest.setCastlename(name);
